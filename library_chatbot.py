@@ -201,14 +201,43 @@ if "messages" not in st.session_state:
 for msg in chat_history.messages:
     st.chat_message(msg.type).write(msg.content)
 
-# 사용자 입력
-if prompt_message := st.chat_input("지금 기분이나 상황을 이야기해보세요 🍰"):
+# ✅ 입력창 + 식단 추천 버튼 추가
+col1, col2 = st.columns([4, 1])
+with col1:
+    prompt_message = st.chat_input("지금 기분이나 상황을 이야기해보세요 🍰")
+with col2:
+    recommend = st.button("🍱 식단 추천")
+
+# 💬 일반 대화 처리
+if prompt_message:
     st.chat_message("human").write(prompt_message)
     with st.chat_message("ai"):
         with st.spinner("Thinking..."):
             config = {"configurable": {"session_id": "any"}}
             response = conversational_rag_chain.invoke(
                 {"input": prompt_message},
+                config
+            )
+            answer = response['answer']
+            st.write(answer)
+            with st.expander("참고 문서 확인"):
+                for doc in response['context']:
+                    st.markdown(doc.metadata['source'], help=doc.page_content)
+
+# 🍱 식단 추천 버튼 동작
+if recommend:
+    st.chat_message("human").write("지금까지의 대화를 참고해서 식단을 추천해줘 🍱")
+    with st.chat_message("ai"):
+        with st.spinner("GPT가 메뉴를 고민 중이에요... 😋"):
+            config = {"configurable": {"session_id": "any"}}
+            response = conversational_rag_chain.invoke(
+                {
+                    "input": (
+                        "지금까지의 대화를 참고해서 사용자에게 어울리는 식단을 추천해줘. "
+                        "기분과 상황을 반영해서 따뜻하고 친근한 말투로 이야기해줘. "
+                        "음식 이름과 간단한 이유도 함께 알려줘."
+                    )
+                },
                 config
             )
             answer = response['answer']

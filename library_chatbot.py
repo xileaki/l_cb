@@ -131,7 +131,7 @@ def initialize_components(selected_model):
     return rag_chain
 
 # Streamlit UI
-st.header("국립부경대 도서관 규정 Q&A 챗봇 💬 📚")
+st.header("MoodBite")
 
 # 첫 실행 안내 메시지
 if not os.path.exists("./chroma_db"):

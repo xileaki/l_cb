@@ -126,6 +126,9 @@ def initialize_components(selected_model):
     If you don't know the answer, just say that you don't know. \
     Keep the answer perfect. please use imogi with the answer.
     대답은 한국어로 하고, 존댓말을 써줘.\
+    식단추천은 추천해달라고 할때 까지 절대 하지마.\
+    그리고 상담자의 기분에 맞춰 잘 대답해줘.\
+    
 
     {context}"""
     qa_prompt = ChatPromptTemplate.from_messages(
